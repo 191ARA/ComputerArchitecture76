@@ -1,0 +1,18 @@
+Kenzhetai Arman
+
+Assignment 1 
+
+What are the Von Neumann Principles ?
+The von Neumann principles are the basic ideas underlying modern computers. These include separating memory and processor, storing data and programs in one place, executing commands one after another, and using a block for calculations and a block for control. Thanks to these principles, the universal and programmable computers that we use today were created.
+
+What is Moore’s Law ?
+Moore's Law is a rule made by Gordon Moore in 1965. It says that the number of transistors in microchips doubles about every two years. This helped make computers more powerful and cheaper. In recent years, growth has slowed down, but companies find new ways to improve devices, for example, with multitasking and new production technologies.
+
+Please describe manufacturing process of chips
+The production of microchips starts with making silicon plates. Different material layers are added to create transistors and connections. Then, special methods are used to make very small parts. In the end, the finished chips are tested, the good ones are selected, placed in cases, and sent to devices.
+
+What is Instruction Set Architecture ?
+Instruction Set Architecture (ISA) is a set of rules that defines what commands a processor can execute and how it works with memory and other devices. It is a language that computer hardware understands. There are different architectures, such as x86 (Intel, AMD) and ARM (mobile phones). Each has its own advantages and is used in different areas.
+
+What is the difference between RISC and CISC architectures ? 
+In Russia and CIS countries, foreign processors like x86 and ARM have been used for a long time. But in recent years, Russian processors like Elbrus and Baikal have been developing actively. Russian processors are often made for security and to replace imported solutions, but they are still slower and use more energy than Western ones. In CIS countries, the situation is similar, but many use foreign processors because creating their own requires a lot of money and time.

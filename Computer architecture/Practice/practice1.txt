@@ -1,0 +1,109 @@
+[20/20] <1.6> Your colleague at AMD suggests that, since the yield is so poor,
+ you might make chips more cheaply if you released multiple versions of the same
+ chip, just with different numbers of cores. For example, you could sell Phoenix8,
+ Phoenix4, Phoenix2, and Phoenix1, which contain 8, 4, 2, and 1 cores on each chip,
+ respectively. If all eight cores are defect-free, then it is sold as Phoenix8. Chips with
+ four to seven defect-free cores are sold as Phoenix4, and those with two or three
+ defect-free cores are sold as Phoenix2. For simplification, calculate the yield for
+ a single core as the yield for a chip that is 1/8 the area of the original Phoenix chip.
+ Then view that yield as an independent probability of a single core being defect
+ free. Calculate the yield for each configuration as the probability of at the corre
+sponding number of cores being defect free.
+ 
+ a. [20] <1.6> What is the yield for a single core being defect free as well as the
+ yield for Phoenix4, Phoenix2 and Phoenix1?
+
+
+ 
+ b. [5] <1.6> Using your results from part a, determine which chips you think it
+ would be worthwhile to package and sell, and why.
+ 
+ c. [10] <1.6> If it previously cost $20 dollars per chip to produce Phoenix8, what
+ will be the cost of the new Phoenix chips, assuming that there are no additional
+ costs associated with rescuing them from the trash?
+ 
+ d. [20]<1.6> You currently make a profit of$30 for each defect-free Phoenix 8,and
+ you will sell each Phoenix 4 chip for $25. How much is your profit per Phoenix 8
+ chip if you consider (i) the purchase price of Phoenix 4 chips to be entirely profit
+ and (ii) apply the profit of Phoenix 4 chips to each Phoenix 8 chip in proportion
+ to how many are produced? Use the yields calculated from part Problem 1.3a,
+ not from problem 1.1a.
+ 
+
+
+
+Part A
+YieldCore = Yieldwafer*1/(1+EDR*CoreArea)**N
+CoreArea=DieSize/Cores
+CoreArea = 2/8=0.25cm
+
+Single core output:
+YieldCore = 1/(1+0.04*0.25)**14=0.87
+
+Binomial distribution:
+C(n,k)=n!/k!(n-k)!
+P(k)=C(8,k)×(YieldCore)**k*(1−YieldCore)**(8−k)
+
+P(8)= 0.3282
+P(7)+P(6)+P(5)+P(4)= 0.4336+0.1975+0.0345+0.0047=0.6703
+P(3)+ P(2)= 0.0004+0.0011=0.0015
+P(1)= 0.00000437
+
+C(8,8)=1 P(8)=1×(0.87)∗∗8(0.13)∗∗0=0.3282
+C(8,7)=8 P(7)=8×(0.87)∗∗7(0.13)∗∗1=0.4336
+C(8,6)=28 P(6)=28×(0.87)∗∗6(0.13)∗∗2=0.1975
+C(8,5)=56 P(5)=56×(0.87)∗∗5(0.13)∗∗3=0.0345
+ C(8,4)=70 P(4)=70×(0.87)∗∗4(0.13)∗∗4=0.0047
+C(8,3)=56 P(3)=56×(0.87)∗∗3(0.13)∗∗5=0.0004
+C(8,2)=28 P(2)=28×(0.87)∗∗2(0.13)∗∗6=0.0011
+C(8,1)=8 P(1)=8×(0.87)∗∗1(0.13)∗∗7=0.00000437
+
+
+
+Part B
+
+Phoenix 8 is good to sell because it gives the most profit.
+Phoenix 4 is also a good choice because many chips with 4-7 cores work well 
+Phoenix 2 has a low output and may not bring profit.
+Phoenix 1 is not practical to sell because a 1-core chip is not popular.
+Conclusion: Phoenix 8 and Phoenix 4 are the best models to sell.
+
+
+
+
+
+
+Part C
+Before, making Phoenix 8 cost $20. The new versions are the same chip but with defects, so they do not need extra costs.
+Yield and cost:
+•	Phoenix 8: $20 (32,82% yield)
+•	Phoenix 4: $20 (67,03% yield)
+•	Phoenix 2: $20 (0,15% yield)
+•	Phoenix 1: $20 (0,000437% yield)
+The cost stays the same, but changing the yield may change the average price.
+
+
+
+Part D
+
+If the price of Phoenix4 is net profit:
+
+67% of the chips are used as Phoenix4.
+$25 * 67% = $16.75 profit per chip.
+New profit for Phoenix8:
+ProfitPhoenix8 = 30 + 16.75 = $46.75
+The profit from Phoenix4 is distributed:
+
+Profit from Phoenix4:
+ProfitPhoenix4 = 25 * 67 = 1675
+Distributed to Phoenix8:
+ProfitPhoenix8 = 30 + 1675 / 32.8 = $81
+
+
+
+
+
+
+
+
+
