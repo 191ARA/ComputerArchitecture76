@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .game-container {
+            display: grid;
+            grid-template-columns: 250px repeat(3, 1fr);
+            gap: 15px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .difficulty-header {
+            text-align: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+            grid-column: span 1;
+        }
+
+        .easy { background: #4CAF50; }
+        .medium { background: #FF9800; }
+        .hard { background: #F44336; }
+
+        .theme {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            color: #333;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .card.answered {
+            background: #FF5252;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            animation: modalShow 0.3s ease;
+            line-height: 1.6;
+        }
+
+        @keyframes modalShow {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 24px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="gameContainer">
+        <!-- Пустой элемент для выравнивания -->
+        <div></div>
+
+        <!-- Заголовки сложностей -->
+        <div class="difficulty-header easy">easy</div>
+        <div class="difficulty-header medium">medium</div>
+        <div class="difficulty-header hard">hard</div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeBtn">&times;</span>
+            <div id="answerContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const themes = [
+            'Direct Execution',
+            'Thread API',
+            'Сравнение Direct Execution и Thread API',
+            'Примеры Thread API (POSIX)',
+            'Преимущества и недостатки Direct Execution'
+        ];
+
+        const difficulties = ['easy', 'medium', 'hard'];
+        
+        const questions = [
+            // Тема 1: Direct Execution / Topic 1: Direct Execution
+            { theme: 0, difficulty: 0, answer: 'Что такое Direct Execution? / What is Direct Execution?' },
+            { theme: 0, difficulty: 1, answer: 'Назовите два недостатка Direct Execution. / Name two disadvantages of Direct Execution.' },
+            { theme: 0, difficulty: 2, answer: 'Почему Direct Execution не подходит для многопоточных приложений? / Why is Direct Execution not suitable for multithreaded applications?' },
+            
+            // Тема 2: Thread API / Topic 2: Thread API
+            { theme: 1, difficulty: 0, answer: 'Что позволяет делать Thread API? / What does the Thread API allow you to do?' },
+            { theme: 1, difficulty: 1, answer: 'Какие функции используются для создания потока в POSIX и Windows? / Which functions are used to create a thread in POSIX and Windows?' },
+            { theme: 1, difficulty: 2, answer: 'Как pthread_join влияет на выполнение основного потока? / How does pthread_join affect the execution of the main thread?' },
+            
+            // Тема 3: Сравнение / Topic 3: Comparison
+            { theme: 2, difficulty: 0, answer: 'Какая технология подходит для задач с минимальными задержками? / Which technology is suitable for tasks with minimal latency?' },
+            { theme: 2, difficulty: 1, answer: 'Почему Thread API добавляет накладные расходы? / Why does the Thread API add overhead?' },
+            { theme: 2, difficulty: 2, answer: 'В каком случае стоит выбрать Thread API вместо Direct Execution? / In which case should you choose the Thread API over Direct Execution?' },
+            
+            // Тема 4: Примеры Thread API / Topic 4: Thread API Examples
+            { theme: 3, difficulty: 0, answer: 'Какой заголовочный файл используется для работы с pthreads в C? / Which header file is used for working with pthreads in C?' },
+            { theme: 3, difficulty: 1, answer: 'Что делает функция pthread_create? / What does the pthread_create function do?' },
+            { theme: 3, difficulty: 2, answer: 'Почему порядок вывода сообщений от потоков может быть непредсказуемым? / Why can the order of output messages from threads be unpredictable?' },
+            
+            // Тема 5: Преимущества/недостатки / Topic 5: Advantages/Disadvantages
+            { theme: 4, difficulty: 0, answer: 'Назовите одно преимущество Direct Execution. / Name one advantage of Direct Execution.' },
+            { theme: 4, difficulty: 1, answer: 'В каких системах чаще используется Direct Execution? / In which systems is Direct Execution more commonly used?' },
+            { theme: 4, difficulty: 2, answer: 'Какие риски безопасности возникают при Direct Execution? / What security risks arise with Direct Execution?' }
+        ];
+
+        function initGame() {
+            const container = document.getElementById('gameContainer');
+            
+            // Добавляем темы и карточки
+            for(let i = 0; i < 5; i++) {
+                // Добавляем тему
+                const theme = document.createElement('div');
+                theme.className = 'theme';
+                theme.textContent = themes[i];
+                container.appendChild(theme);
+
+                // Добавляем карточки
+                for(let j = 0; j < 3; j++) {
+                    const card = document.createElement('div');
+                    card.className = `card ${difficulties[j]}`;
+                    card.dataset.answer = questions[i*3 + j].answer;
+                    card.textContent = `${['3000', '4000', '5000'][j]}`;
+                    card.addEventListener('click', handleCardClick);
+                    container.appendChild(card);
+                }
+            }
+        }
+
+        function handleCardClick(e) {
+            if(e.target.classList.contains('answered')) return;
+            
+            const answer = e.target.dataset.answer;
+            showAnswer(answer, e.target);
+        }
+
+        function showAnswer(answer, card) {
+            const modal = document.getElementById('modal');
+            const content = document.getElementById('answerContent');
+            content.innerHTML = `<p style="font-size: 18px; margin-bottom: 15px;">${answer}</p>`;
+            modal.style.display = 'flex';
+
+            document.getElementById('closeBtn').onclick = () => {
+                modal.style.display = 'none';
+                card.classList.add('answered');
+            }
+        }
+
+        window.onclick = function(e) {
+            const modal = document.getElementById('modal');
+            if(e.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        initGame();
+    </script>
+</body>
+</html>
